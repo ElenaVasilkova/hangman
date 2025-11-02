@@ -8,12 +8,12 @@ def get_word() -> str:
     "ежевика", "жаворонок", "зоопарк", "ископаемое", "календарь",
     "лаборатория", "магистраль", "небоскрёб", "олимпиада", "панорама",
     "репетитор", "самолёт", "телескоп", "университет", "фестиваль"]
-    return choice(word_list)
+    return choice(word_list).upper()
 
 
 def is_valid_letter(letter: str) -> bool:
     """Проверка введеного символа"""
-    pass
+    if letter
 
 
 def is_valid_answer(answer: str) -> bool:
@@ -127,23 +127,44 @@ def processing_guess(letter: str, word: str):
     draw_gallows(errors_count)
 
 
-print('Описание игры')
+def game():
 
-while True:
-    word: str = get_word()
-    letters_count: int = len(word)
-    hidden_word = '*' * letters_count
-    print(hidden_word)
-    print('Запрос ввода буквы')
-    letter: str = input()
-    processing_guess(letter, word)
-    print('Сыграем ещё раз? (да / нет)')
+    while True:
+        word: str = get_word()
+        letters_count: int = len(word)
+        hidden_word = '*' * letters_count
+        print(f'''
+            {hidden_word}
+        ''')
+
+        print(f'''
+        У тебя 6 попыток.
+        Введи одну букву или слово целиком.
+            ''')  # Добавить подсчет количества оставшихся попыток
+        letter: str = input().upper()
+        processing_guess(letter, word)
+
+        print('Сыграем ещё раз? (да / нет)')
+        answer_game: str = input()
+        is_valid_answer(answer_game)
+
+        if answer == 'да':
+            continue
+        else:
+            break
+
+
+if __name__ == '__main__':
+    print('''
+        Давай поиграем в "Виселицу"? (да / нет)
+        
+        Нужно угадать загаданное слово, называя буквы, 
+        до того как будет полностью нарисована виселица
+        с человечком.
+        ''')
     answer: str = input()
     is_valid_answer(answer)
 
-    if answer == 'да':
-        continue
-    else:
-        break
+    game() if answer == 'да' else print()
 
-print('Спасибо за игру')
+    print('Спасибо за игру!')
