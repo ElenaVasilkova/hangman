@@ -48,12 +48,12 @@ def is_valid_word(valid_word: str, played_word: list) -> bool:
 
 def is_letter_in_word(letter: str, word: str) -> bool:
     """Проверка наличия буквы в слове"""
-    if is_valid_letter(letter):
-        # проверяем наличие буквы в слове
-        pass
+    if letter in word:
+        print(f'Буква {letter} есть в этом слове!')
+        return True
     else:
-        # просим повторно ввести букву
-        pass
+        print('Такой буквы в этом слове нет!')
+        return False
 
 
 def draw_gallows(errors_count: int, guessed_letters: list, guessed_words: list) -> str:
