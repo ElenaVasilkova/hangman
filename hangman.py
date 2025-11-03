@@ -208,6 +208,7 @@ def game():
             continue
         elif answer_game:
             break
+    print('\nСпасибо за игру!')
 
 
 if __name__ == '__main__':
@@ -218,9 +219,14 @@ if __name__ == '__main__':
         до того как будет полностью нарисована виселица
         с человечком.
         ''')
-    answer: str = input()
-    is_valid_answer(answer)
 
-    game() if answer == 'да' else print()
-
-    print('\nСпасибо за игру!')
+    while True:
+        answer: str = input().lower()
+        if is_valid_answer(answer):
+            if answer == 'да':
+                game()
+            else:
+                print('\nВозвращийся, как захочешь поиграть.')
+                break
+        else:
+            continue
