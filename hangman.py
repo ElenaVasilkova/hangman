@@ -11,10 +11,10 @@ def get_word() -> str:
     return choice(word_list).upper()
 
 
-def is_valid_letter(letter: str, played_letters: list) -> bool:
+def is_valid_letter(valid_letter: str, played_letters: list) -> bool:
     """Проверка введеного символа"""
-    if letter.isalpha():
-        if letter not in played_letters:
+    if valid_letter.isalpha():
+        if valid_letter not in played_letters:
             return True
         else:
             print('Эта буква уже была.')
@@ -24,18 +24,26 @@ def is_valid_letter(letter: str, played_letters: list) -> bool:
         return False
 
 
-def is_valid_answer(answer: str) -> bool:
+def is_valid_answer(valid_answer: str) -> bool:
     """Проверка валидности ответа (да /нет)"""
-    if answer.lower() == 'да' or answer.lower() == 'нет':
+    if valid_answer.lower() == 'да' or valid_answer.lower() == 'нет':
         return True
     else:
         print('Ответь "да" или "нет".')
         return False
 
 
-def is_valid_word(letter: str) -> bool:
-    """Проверка введеного символа"""
-    # проверить, вводилось ли слово ранее
+def is_valid_word(valid_word: str, played_word: list) -> bool:
+    """Проверка, вводилось ли слово ранее"""
+    if valid_word.isalpha():
+        if valid_word.lower() not in played_word:
+            return True
+        else:
+            print('Это слово уже пробовали.')
+            return False
+    else:
+        print('Слово должно состоять из букв русского алфавита.')
+        return False
 
 
 def is_letter_in_word(letter: str, word: str) -> bool:
