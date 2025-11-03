@@ -26,7 +26,11 @@ def is_valid_letter(letter: str, played_letters: list) -> bool:
 
 def is_valid_answer(answer: str) -> bool:
     """Проверка валидности ответа (да /нет)"""
-    pass
+    if answer.lower() == 'да' or answer.lower() == 'нет':
+        return True
+    else:
+        print('Ответь "да" или "нет".')
+        return False
 
 
 def is_valid_word(letter: str) -> bool:
