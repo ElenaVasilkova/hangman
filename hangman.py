@@ -11,10 +11,17 @@ def get_word() -> str:
     return choice(word_list).upper()
 
 
-def is_valid_letter(letter: str) -> bool:
+def is_valid_letter(letter: str, played_letters: list) -> bool:
     """Проверка введеного символа"""
-    # проверить, что введеный символ - буква
-    # проверить, вводилась ли буква ранее
+    if letter.isalpha():
+        if letter not in played_letters:
+            return True
+        else:
+            print('Эта буква уже была.')
+            return False
+    else:
+        print('Введи букву русского алфавита.')
+        return False
 
 
 def is_valid_answer(answer: str) -> bool:
@@ -171,9 +178,10 @@ def game():
         У тебя {tries} попыток.
         Введи одну букву или слово целиком.
             ''')
-        tries -= 1
+
         letter: str = input().upper()
         guessed = processing_guess(letter, word, guessed_letters, guessed_words)
+        tries -= 1
 
         if guessed is True:
             # Выводим результат
