@@ -56,7 +56,7 @@ def is_letter_in_word(letter: str, word: str) -> bool:
         return False
 
 
-def draw_gallows(errors_count: int, guessed_letters: list, guessed_words: list) -> str:
+def draw_gallows(errors_count: int, guessed_letters: list, guessed_words: list):
     """Отрисовка виселицы в зависимости от количества ошибок"""
     match errors_count:
         case 0:
@@ -131,7 +131,7 @@ def draw_gallows(errors_count: int, guessed_letters: list, guessed_words: list) 
         --------
         """)
         case 6:
-            print(""""
+            print("""
             ------
             |    |
             |    O
