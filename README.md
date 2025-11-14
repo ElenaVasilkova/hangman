@@ -111,7 +111,7 @@ Telegram: [@Vasilkova_Elena_A](https://t.me/Vasilkova_Elena_A)
  
 ## Лицензия
 
-Проект распространяется под лицензией MIT. Подробнее см. в файле LICENSE.
+Проект распространяется под лицензией MIT. Подробнее см. в файле [LICENSE](https://github.com/ElenaVasilkova/hangman/blob/main/LICENSE).
 
 ---
 Приятной игры!
