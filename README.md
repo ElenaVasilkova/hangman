@@ -23,12 +23,10 @@ Python 3.6 или выше
 git clone ggit@github.com:ElenaVasilkova/hangman.git
 cd hangman/
 ```
-### Создание виртуального окружения и установка зависимостей
+### Создание виртуального окружения
 ```bash
 python -m venv venv
 source venv/bin/activate
-pip install --upgade pip
-pip install -r -requirements.txt
 ```
 
 ### Запуск игры
