@@ -3,32 +3,42 @@ from random import choice
 
 def get_word() -> str:
     """Получение случайного слова для игры"""
-    # распаковка файла
-    word_list = ["апельсин", "библиотека", "вертолёт", "галактика", "динозавр",
-    "ежевика", "жаворонок", "зоопарк", "ископаемое", "календарь",
-    "лаборатория", "магистраль", "небоскрёб", "олимпиада", "панорама",
-    "репетитор", "самолёт", "телескоп", "университет", "фестиваль",
-    "рак", "ночь", "луна"]
-    return choice(word_list).upper()
+    try:
+        with open("words.txt", 'r', encoding='utf-8') as file:
+            word_list = file.readlines()
+        word = choice(word_list).rstrip().upper()
+        return word
+    except FileNotFoundError:
+        word_list = ["АПЕЛЬСИН", "БИБЛИОТЕКА", "ВЕРТОЛЁТ", "ГАЛАКТИКА", "ДИНОЗАВР",
+                     "ЕЖЕВИКА", "ЖАВОРОНОК", "ЗООПАРК", "ИСКОПАЕМОЕ", "КАЛЕНДАРЬ",
+                     "ЛАБОРАТОРИЯ", "МАГИСТРАЛЬ", "НЕБОСКРЁБ", "ОЛИМПИАДА", "ПАНОРАМА",
+                     "РЕПЕТИТОР", "САМОЛЁТ", "ТЕЛЕСКОП", "УНИВЕРСИТЕТ", "ФЕСТИВАЛЬ",
+                     "РАК", "НОЧЬ", "ЛУНА"]
+        word = choice(word_list).upper()
+        return word
 
 
-def validate_letter(player_input: str, used_letters: list) -> bool:
+def validate_letter(player_input: str, used_letters: set) -> bool:
     """Проверка введенного символа"""
-    code: int = ord(player_input.upper())
-    if player_input.isalpha() and (1040 <= code <= 1071 or code == 1025):
-        if player_input not in used_letters:
-            return True
-        else:
-            print('Эта буква уже была.')
-            return False
-    else:
+    if not player_input:
+        return False
+
+    player_input = player_input.upper()
+    if (not player_input.isalpha() or player_input
+            not in 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'):
         print('Введи букву русского алфавита.')
         return False
+
+    if player_input in used_letters:
+        print('Эта буква уже была.')
+        return False
+
+    return True
 
 
 def validate_answer(valid_answer: str) -> bool:
     """Проверка валидности ответа (да/нет)"""
-    if valid_answer.lower() == 'да' or valid_answer.lower() == 'нет':
+    if valid_answer.lower() in ['да', 'нет']:
         return True
     else:
         print('Ответь "да" или "нет".')
@@ -38,20 +48,18 @@ def validate_answer(valid_answer: str) -> bool:
 def validate_rus_word(word: str) -> bool:
     """Проверка, что введено русское слово"""
     for char in word:
-        code: int = ord(char.upper())
-        if 1040 <= code <= 1071 or code == 1025:
-            continue
-        else:
+        if char not in 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ':
             print('Слово должно состоять из букв русского алфавита.')
             return False
     else:
         return True
 
 
-def validate_word(player_input: str, used_words: list) -> bool:
-    """Проверка, что слово состоит не вводилось ранее"""
-    if validate_rus_word(player_input):
-        if player_input.upper() in used_words:
+def validate_word(player_input: str, used_words: set) -> bool:
+    """Проверка, что слово не вводилось ранее"""
+    player_input_upper = player_input.upper()
+    if validate_rus_word(player_input_upper):
+        if player_input_upper in used_words:
             print('Это слово уже пробовали.\n')
             return False
         else:
@@ -72,10 +80,15 @@ def check_letter_in_word(secret_word: str, player_input: str) -> bool:
 
 def check_whole_word(secret_word: str, player_input: str) -> bool:
     """Проверка - угадано ли слово"""
-    if player_input.lower() == secret_word.lower():
-        return True
-    else:
-        return False
+    return player_input.upper() == secret_word.upper()
+
+
+def ask_play_again() -> bool:
+    """Запрос на повторную игру"""
+    while True:
+        answer: str = input('Сыграем ещё раз? (да/нет): ').strip().lower()
+        if validate_answer(answer):
+            return answer == 'да'
 
 
 def display_word_progress(secret_word: str, display_word: list, player_input: str) -> list:
@@ -86,7 +99,7 @@ def display_word_progress(secret_word: str, display_word: list, player_input: st
     return display_word
 
 
-def display_result(attempts: int, used_letters: list, used_words: list) -> None:
+def display_result(attempts: int, used_letters: set, used_words: set) -> None:
     """Вывод на дисплей текущего результата игры"""
     print(draw_gallows(attempts))
     print(f'Количество оставшихся попыток: {attempts}.\n')
@@ -180,23 +193,48 @@ def draw_gallows(attempts: int) -> str:
     return hangman_stages[attempts]
 
 
-def process_letter_input():
-    """Обработка ввода одной буквы"""
-    pass
+def process_letter_guess(secret_word: str, display_word: list, used_letters: set,
+                         player_input: str) -> tuple[list, bool, bool]:
+    """Обработка попытки угадать букву"""
+    is_decrease_attempts: bool = False
+    if not validate_letter(player_input, used_letters):
+        is_guessed = False
+        return display_word, is_guessed, is_decrease_attempts
+
+    used_letters.add(player_input)
+    letter_found = check_letter_in_word(secret_word, player_input)
+
+    if letter_found:
+        new_display_word = display_word_progress(secret_word, display_word, player_input)
+        is_guessed = ("".join(new_display_word) == secret_word)
+        return new_display_word, is_guessed, is_decrease_attempts
+    else:
+        is_guessed = False
+        is_decrease_attempts = True
+        return display_word, is_guessed, is_decrease_attempts
 
 
-def initialize_round():
-    """Инициализация переменных раунда"""
-    pass
+def process_word_guess(secret_word: str, used_words: set, player_input: str
+                       ) -> tuple[bool, bool]:
+    """Обработка попытки угадать слово"""
+    is_decrease_attempts: bool = False
+    if not validate_word(player_input, used_words):
+        is_guessed = False
+        is_decrease_attempts = True
+        return is_guessed, is_decrease_attempts
+
+    used_words.add(player_input.upper())
+    is_guessed = check_whole_word(secret_word, player_input)
+    is_decrease_attempts = not is_guessed
+    return is_guessed, is_decrease_attempts
 
 
 def game() -> None:
     """Основной игровой цикл"""
     while True:
-        guessed: bool = False
-        is_letter_valid: bool = True
-        used_letters: list = []
-        used_words: list = []
+        is_guessed: bool = False
+        used_letters: set = set()
+        used_words: set = set()
         attempts: int = 6
         player_input: str = ''
         secret_word: str = get_word()
@@ -204,61 +242,46 @@ def game() -> None:
 
         print(draw_gallows(attempts))
         print(f'У тебя {attempts} попыток.\n')
-        while not guessed and attempts > 0:
-            if is_letter_valid:
-                display_word = display_word_progress(
-                    secret_word, display_word, player_input
-                )
-                print(f'{" ".join(display_word)}\n')
-                print('Введи одну букву или слово целиком.\n')
 
-            player_input = input().upper()
+        while not is_guessed and attempts > 0:
+            display_word = display_word_progress(
+                secret_word, display_word, player_input)
+            print(f'{" ".join(display_word)}\n')
+            print('Введи одну букву или слово целиком.\n')
+
+            player_input = input().upper().strip()
+
+            if not player_input:
+                print('Введи букву или слово.\n')
+                continue
+
+            is_decrease_attempts: bool = False
+
             if len(player_input) == 1:
-                is_letter_valid = validate_letter(player_input, used_letters)
-                if is_letter_valid:
-                    used_letters.append(player_input)
-                    letter_found: bool = check_letter_in_word(secret_word, player_input)
-                    if letter_found:
-                        display_word = display_word_progress(secret_word, display_word, player_input)
-                        guessed = check_whole_word(secret_word, "".join(display_word))
-                        display_result(attempts, used_letters, used_words)
-                    else:
-                        attempts -= 1
-                        display_result(attempts, used_letters, used_words)
-                        continue
-                else:
-                    continue
+                display_word, is_guessed, is_decrease_attempts = process_letter_guess(
+                    secret_word, display_word, used_letters, player_input
+                )
 
             elif len(player_input) > 1:
-                is_word_valid: bool = validate_word(player_input, used_words)
-                if is_word_valid:
-                    guessed = check_whole_word(secret_word, player_input)
-                    if not guessed:
-                        attempts -= 1
-                        used_words.append(player_input)
-                        display_result(attempts, used_letters, used_words)
-                else:
-                    attempts -= 1
+                is_guessed, is_decrease_attempts = process_word_guess(
+                    secret_word, used_words, player_input)
 
-        draw_gallows(attempts)
+            if is_decrease_attempts:
+                attempts -= 1
 
-        if guessed:
+            display_result(attempts, used_letters, used_words)
+
+        if is_guessed:
             print('Поздравляю! Ты угадал.\n')
             display_word = display_word_progress(secret_word, display_word, player_input)
-            display_result(attempts, used_letters, used_words)
             print(f'{" ".join(display_word)}\n')
         else:
             print('Ты проиграл!\n')
             print(f'Загаданное слово: {secret_word.upper()}\n')
 
-        print('Сыграем ещё раз? (да / нет)\n')
-        player_answer: str = input()
-        validate_answer(player_answer)
-
-        if player_answer == 'да':
-            continue
-        elif player_answer:
+        if not ask_play_again():
             break
+
     print('\nСпасибо за игру!')
 
 
@@ -268,7 +291,7 @@ if __name__ == '__main__':
         
         Правила: Нужно угадать загаданное слово, 
         называя буквы, до того как будет полностью 
-        нарисована виселица человечком.
+        нарисована виселица c человечком.
         ''')
 
     while True:
