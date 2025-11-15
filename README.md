@@ -23,10 +23,12 @@ Python 3.6 или выше
 git clone ggit@github.com:ElenaVasilkova/hangman.git
 cd hangman/
 ```
-### Создание виртуального окружения
+### Создание виртуального окружения и установка зависимостей
 ```bash
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate
+python3 -m pip install --upgrade pip
+pip install -r requirements.txt
 ```
 
 ### Запуск игры
@@ -101,11 +103,14 @@ hangman/
 
 ## Разработчик 
 [Василькова Елена](https://github.com/ElenaVasilkova)  
-Telegram: [@Vasilkova_Elena_A](https://t.me/Vasilkova_Elena_A)
+[@Vasilkova_Elena_A](https://t.me/Vasilkova_Elena_A)
 
 Язык: Python 3
 
 Лицензия: MIT
+
+## Ревью:
+[@grandpraline](https://t.me/zhukovsd_it_chat/53244/270754)
  
 ## Лицензия
 
