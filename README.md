@@ -102,8 +102,9 @@ hangman/
 Если игра не находит файл words.txt, она автоматически использует встроенный список слов.
 
 ## Разработчик 
-[Василькова Елена](https://github.com/ElenaVasilkova)  
-[@Vasilkova_Elena_A](https://t.me/Vasilkova_Elena_A)
+- GitHub: [![GitHub](https://img.shields.io/badge/-181717?style=flat-square&logo=github&logoColor=white)][Василькова Елена](https://github.com/ElenaVasilkova)  
+
+- Telegram: [![ ](https://img.shields.io/badge/-2CA5E0?style=flat-square&logo=telegram&logoColor=white)][@Vasilkova_Elena_A](https://t.me/Vasilkova_Elena_A)
 
 Язык: Python 3
 
