@@ -31,7 +31,7 @@ def ask_play_again() -> bool:
             return answer == 'да'
 
 
-def display_word_progress(secret_word: str, display_word: list, player_input: str) -> list:
+def display_word_progress(secret_word: str, display_word: list[str], player_input: str) -> list:
     """Обработка отображения угадывания слова"""
     for i in range(len(secret_word)):
         if secret_word[i] == player_input:
@@ -51,7 +51,7 @@ def display_result(attempts: int, used_letters: set, used_words: set) -> None:
         print(constants.NAMED_WORDS, ", ".join(used_words))
 
 
-def process_letter_guess(secret_word: str, display_word: list, used_letters: set,
+def process_letter_guess(secret_word: str, display_word: list[str], used_letters: set,
                          player_input: str) -> tuple[list, bool, bool]:
     """Обработка попытки угадать букву"""
     is_decrease_attempts: bool = False
@@ -86,6 +86,27 @@ def process_word_guess(secret_word: str, used_words: set, player_input: str
     is_guessed = check_whole_word(secret_word, player_input)
     is_decrease_attempts = not is_guessed
     return is_guessed, is_decrease_attempts
+
+
+def give_hint(secret_word: str, display_word: list, used_letters: set
+              ) -> tuple[list, bool, bool]:
+    """Предложение подсказки - открыть первую букву"""
+    print(constants.HINT_PROMPT)
+    while True:
+        answer = input().strip().lower()
+        if validate_answer(answer):
+            if answer == 'да':
+                # Открываем первую букву
+                print(constants.HINT_USED)
+                letter = secret_word[0]
+                return process_letter_guess(secret_word, display_word, used_letters, letter)
+            else:
+                # Игрок отказался от подсказки
+                is_guessed = False
+                is_decrease_attempts = False
+                return display_word, is_guessed, is_decrease_attempts
+        else:
+            print(constants.INVALID_ANSWER)
 
 
 def run_game() -> None:
@@ -130,11 +151,16 @@ def run_game() -> None:
 
             display_result(attempts, used_letters, used_words)
 
+            if attempts <= 3 and display_word[0] == '*':
+                display_word, is_guessed, is_decrease_attempts = give_hint(
+                    secret_word, display_word, used_letters
+                )
+
         # Завершение игры
         if is_guessed:
             print(constants.WIN)
-            display_word = display_word_progress(secret_word, display_word, player_input)
-            print(" ".join(display_word))
+            # display_word = display_word_progress(secret_word, display_word, player_input)
+            print(" ".join(list(secret_word.upper())))
         else:
             print(constants.LOSE)
             print(constants.SECRET_WORD_REVEAL, secret_word.upper())
