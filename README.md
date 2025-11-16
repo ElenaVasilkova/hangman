@@ -10,6 +10,7 @@
 - Возможность повторной игры
 - Автоматический резервный список слов
 - Полная валидация ввода
+- Модульная архитектура
 
 
 ## Установка и запуск
@@ -20,7 +21,7 @@ Python 3.6 или выше
 ### Клонирование удаленного репозитория
 
 ```bash
-git clone ggit@github.com:ElenaVasilkova/hangman.git
+git clone git@github.com:ElenaVasilkova/hangman.git
 cd hangman/
 ```
 ### Создание виртуального окружения и установка зависимостей
@@ -40,9 +41,14 @@ python hangman.py
 
 ```text
 hangman/
-├── hangman.py          # Основной файл игры
-├── words.txt           # Файл со словами (опционально)
-└── README.md           # Документация
+├── main.py              # Точка входа в приложение
+├── game.py              # Основной игровой цикл
+├── validators.py        # Валидация ввода пользователя
+├── display.py           # Отрисовка виселицы и интерфейса
+├── constants.py         # Все текстовые сообщения и настройки
+├── words.txt            # Файл со словами
+├── README.md            # Документация
+└── requirements.txt     # Зависимости проекта
 ```
 
 ## Правила игры
@@ -67,15 +73,24 @@ hangman/
 телефон
 ```
 
-## Функциональность
+## Архитектура проекта
+
+### Модули и их ответственность
+
+**main.py** - запуск приложения
+**game.py** - основной игровой цикл, логика игры
+**validators.py** - валидация ввода (буквы, слова, ответы)
+**display.py** - отрисовка виселицы
+**constants.py** - хранение всех текстов и настроек
+
 ### Основные функции
 
-`get_word()` - получение случайного слова  
-`validate_letter()` - проверка введенной буквы  
-`validate_word()` - проверка введенного слова  
-`display_word_progress()` - отображение прогресса угадывания  
-`draw_gallows()` - отрисовка виселицы  
-`game()` - основной игровой цикл  
+`get_word()` - получение случайного слова (words.py)    
+`validate_letter()` - проверка введенной буквы (validators.py)  
+`validate_word()` - проверка введенного слова (validators.py)  
+`display_word_progress()` - отображение прогресса угадывания (game.py)  
+`draw_gallows()` - отрисовка виселицы (display.py)  
+`run_game()` - основной игровой цикл (game.py)  
 
 ### Валидация ввода
 
@@ -102,16 +117,16 @@ hangman/
 Если игра не находит файл words.txt, она автоматически использует встроенный список слов.
 
 ## Разработчик 
-- GitHub: [![GitHub](https://img.shields.io/badge/-181717?style=flat-square&logo=github&logoColor=white)][Василькова Елена](https://github.com/ElenaVasilkova)  
+![GitHub](https://img.shields.io/badge/-181717?style=flat-square&logo=github&logoColor=white) [Василькова Елена](https://github.com/ElenaVasilkova)  
 
-- Telegram: [![ ](https://img.shields.io/badge/-2CA5E0?style=flat-square&logo=telegram&logoColor=white)][@Vasilkova_Elena_A](https://t.me/Vasilkova_Elena_A)
+![ ](https://img.shields.io/badge/-2CA5E0?style=flat-square&logo=telegram&logoColor=white) [@Vasilkova_Elena_A](https://t.me/Vasilkova_Elena_A)
 
 Язык: Python 3
 
 Лицензия: MIT
 
 ## Ревью:
-[@grandpraline](https://t.me/zhukovsd_it_chat/53244/270754)
+![ ](https://img.shields.io/badge/-2CA5E0?style=flat-square&logo=telegram&logoColor=white) [@grandpraline](https://t.me/zhukovsd_it_chat/53244/270754)
  
 ## Лицензия
 
